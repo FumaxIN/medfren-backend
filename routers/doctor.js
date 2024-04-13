@@ -47,6 +47,10 @@ router.put("/account_setup", verifyToken, async (req, res) => {
         if (!username || !name || !dob || !phone) {
             return res.status(400).send({message: "Missing fields"});
         }
+        if (await Doctor .findOne({ username })) {
+            return res.status(400).send({message: "Username already exists"});
+        }
+
         doctor.set({username, name, dob, phone});
         doctor.account_setup = true;
         await doctor.save();
